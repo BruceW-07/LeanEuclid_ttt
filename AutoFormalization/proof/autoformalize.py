@@ -182,7 +182,7 @@ def main():
             testing_idx = [i for i in range(1, 49) if i not in [2, 6, 12, 32, 42]]
 
         for i in tqdm.tqdm(testing_idx):
-            model = GPT4(
+            model = LLM(
                 model=(
                     "gpt-4-vision-preview"
                     if args.reasoning == "multi-modal"

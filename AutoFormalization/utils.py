@@ -8,7 +8,7 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 EXAMPLE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "example"))
 
 
-class GPT4:
+class LLM:
     def __init__(self, model="gpt-4o-mini", temperature=0.2, max_tokens=300):
         self.client = OpenAI(
             api_key="sk-6uZ2e0FUkorlE55e4bFd8d41EeD64014853a787e3a4a6dF2",

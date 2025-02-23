@@ -103,6 +103,12 @@ def main():
     parser.add_argument(
         "--num_examples", type=int, default=0, help="Number of examples"
     )
+    parser.add_argument(
+        "--model", 
+        type=str,
+        required=True,
+        help="Testing model",
+    )
     args = parser.parse_args()
 
     random.seed(42)
@@ -157,9 +163,11 @@ def main():
             testing_idx = [i for i in range(1, 49) if i not in [2, 6, 12, 32, 42]]
 
         for i in tqdm.tqdm(testing_idx):
-            model = GPT4(
+            model = LLM(
                 model=(
-                    "gpt-4o-mini"
+                    "Qwen/Qwen2.5-14B-Instruct"
+                    # "DeepSeek-R1"
+                    # "gpt-4o-mini"
                     # "gpt-4-vision-preview"
                     # if args.reasoning == "multi-modal"
                     # else "gpt-4-1106-preview"
@@ -227,6 +235,7 @@ def main():
                     if match:
                         pred = match.group(1)
                         pred = re.sub(r"\s+", " ", pred).strip()
+                        # 判断是否符合 lean 语法
                         error_message = validator.validate(pred, str(i))
                         print(f"error_message: {error_message}")
                         if error_message is None:
