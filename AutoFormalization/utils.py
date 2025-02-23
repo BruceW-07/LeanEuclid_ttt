@@ -9,8 +9,11 @@ EXAMPLE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "example")
 
 
 class GPT4:
-    def __init__(self, model="gpt-4-1106-preview", temperature=0.2, max_tokens=300):
-        self.client = OpenAI()
+    def __init__(self, model="gpt-4o-mini", temperature=0.2, max_tokens=300):
+        self.client = OpenAI(
+            api_key="sk-6uZ2e0FUkorlE55e4bFd8d41EeD64014853a787e3a4a6dF2",
+            base_url="https://api-zjuvag.truth-ai.com.cn/v1/"
+        )
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
