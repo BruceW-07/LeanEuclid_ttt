@@ -159,9 +159,10 @@ def main():
         for i in tqdm.tqdm(testing_idx):
             model = GPT4(
                 model=(
-                    "gpt-4-vision-preview"
-                    if args.reasoning == "multi-modal"
-                    else "gpt-4-1106-preview"
+                    "gpt-4o-mini"
+                    # "gpt-4-vision-preview"
+                    # if args.reasoning == "multi-modal"
+                    # else "gpt-4-1106-preview"
                 )
             )
             content = deepcopy(example_content)
@@ -227,8 +228,12 @@ def main():
                         pred = match.group(1)
                         pred = re.sub(r"\s+", " ", pred).strip()
                         error_message = validator.validate(pred, str(i))
+                        print(f"error_message: {error_message}")
                         if error_message is None:
                             result_file = os.path.join(result_dir, str(i) + ".json")
+                            # print(f"result_file: {result_file}")
+                            # print(f"prediction: {pred}")
+                            # print(f"ground_truth: {formal_statement}")
                             with open(result_file, "w", encoding="utf-8") as f:
                                 json.dump(
                                     {
