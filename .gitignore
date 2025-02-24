@@ -5,10 +5,12 @@ Book/All.lean
 /.vscode/*
 /result
 /tmp
+/conversation
 /E3/_tmp/ 
 /E3/_out/
 *.olean
 .DS_Store
+*.zip
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
