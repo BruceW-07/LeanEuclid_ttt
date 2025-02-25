@@ -89,7 +89,8 @@ def main():
         if args.dataset == "UniGeo":
             testing_idx = range(1, 21)
         else:
-            testing_idx = [i for i in range(1, 49) if i not in [2, 6, 12, 32, 42]]
+            # testing_idx = [i for i in range(1, 49) if i not in [2, 6, 12, 32, 42]]
+            testing_idx = range(1, 49)
 
         tot += len(testing_idx)
 

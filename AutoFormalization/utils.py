@@ -9,6 +9,7 @@ EXAMPLE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "example")
 
 
 class LLM:
+    # 对于 deepseek-r1 这种模型, 可能需要增加 max_tokens 来保证其正确输出
     def __init__(self, model="gpt-4o-mini", temperature=0.2, max_tokens=300):
         self.client = OpenAI(
             api_key="sk-6uZ2e0FUkorlE55e4bFd8d41EeD64014853a787e3a4a6dF2",

@@ -109,6 +109,12 @@ def main():
         required=True,
         help="Testing model",
     )
+    parser.add_argument(
+        "--max_tokens", 
+        type=int,
+        default=300,
+        help="limiting max tokens",
+    )
     args = parser.parse_args()
 
     random.seed(42)
@@ -150,6 +156,16 @@ def main():
             c,
         )
         os.makedirs(result_dir, exist_ok=True)
+        conversation_dir = os.path.join(
+            ROOT_DIR,
+            "conversation",
+            "statement",
+            args.dataset,
+            args.reasoning,
+            str(args.num_examples) + "shot",
+            c,
+        )
+        os.makedirs(conversation_dir, exist_ok=True)
 
         example_content = []
         if args.num_examples > 0:
@@ -160,19 +176,26 @@ def main():
         if args.dataset == "UniGeo":
             testing_idx = range(1, 21)
         else:
-            testing_idx = [i for i in range(1, 49) if i not in [2, 6, 12, 32, 42]]
+            # testing_idx = [i for i in range(1, 49) if i not in [2, 6, 12, 32, 42]]
+            # testing_idx = [i for i in range(1, 49) if i not in [10,11,14,15,16,17,18,19,20,21,25,26,33,34,36,37,4,43,46,5,8,9]]
+            testing_idx = range(1, 49)
+            # testing_idx = range(1, 2)
 
         for i in tqdm.tqdm(testing_idx):
             model = LLM(
                 model=(
-                    "Qwen/Qwen2.5-14B-Instruct"
+                    args.model
+                    # "Qwen/Qwen2.5-14B-Instruct"
                     # "DeepSeek-R1"
                     # "gpt-4o-mini"
                     # "gpt-4-vision-preview"
                     # if args.reasoning == "multi-modal"
                     # else "gpt-4-1106-preview"
-                )
+                ),
+                max_tokens=args.max_tokens
             )
+            print(f"USING MODEL: {model.model}")
+            print(f"max_tokens: {model.max_tokens}")
             content = deepcopy(example_content)
 
             problem_text = ""
@@ -228,9 +251,13 @@ def main():
                 except Exception as e:
                     print(f"An error occurred: {e}")
 
+                # print(f"response: {response}")
+
                 if response:
                     pattern = r"<<<(.*?)>>>"
                     match = re.search(pattern, response, re.DOTALL)
+
+                    # print(f"match: {match}")
 
                     if match:
                         pred = match.group(1)
@@ -240,9 +267,6 @@ def main():
                         print(f"error_message: {error_message}")
                         if error_message is None:
                             result_file = os.path.join(result_dir, str(i) + ".json")
-                            # print(f"result_file: {result_file}")
-                            # print(f"prediction: {pred}")
-                            # print(f"ground_truth: {formal_statement}")
                             with open(result_file, "w", encoding="utf-8") as f:
                                 json.dump(
                                     {
@@ -252,13 +276,33 @@ def main():
                                     f,
                                     ensure_ascii=False,
                                 )
+                            # 将对话内容保存到文件
+                            conversation_file = os.path.join(conversation_dir, str(i) + ".json")
+                            with open(conversation_file, "w", encoding="utf-8") as f:
+                                json.dump(
+                                    model.messages,
+                                    f,
+                                    ensure_ascii=False,
+                                    indent=4
+                                )
                             break
                         else:
                             model.add_message("assistant", response)
                             model.add_message("user", lean_error(error_message))
                     else:
+                        # 多次 query 并不是简单的重复尝试, 而是使用上下文并添加错误信息来辅助模型输出
                         model.add_message("assistant", response)
                         model.add_message("user", parse_error())
+
+            # 将对话内容保存到文件
+            conversation_file = os.path.join(conversation_dir, str(i) + ".json")
+            with open(conversation_file, "w", encoding="utf-8") as f:
+                json.dump(
+                    model.messages,
+                    f,
+                    ensure_ascii=False,
+                    indent=4
+                )
 
 
 if __name__ == "__main__":
