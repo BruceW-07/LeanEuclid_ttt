@@ -11,7 +11,7 @@ endef
 
 DeepSeek-R1_statement_5shot:
 	${CLEANUP}
-	python3 AutoFormalization/statement/autoformalize.py --dataset Book --category "" --reasoning text-only --num_query 1 --num_examples 5 --model deepseek-r1 --max_tokens 4000
+	python3 AutoFormalization/statement/autoformalize.py --dataset Book --category "" --reasoning text-only --num_query 1 --num_examples 5 --model deepseek-r1-azure --max_tokens 4000
 	python3 AutoFormalization/statement/evaluate.py --dataset Book --category "" --reasoning text-only --num_examples 5 > result/accuracy.txt
 	${ZIP}
 

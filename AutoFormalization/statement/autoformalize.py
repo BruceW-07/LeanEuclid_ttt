@@ -178,8 +178,8 @@ def main():
         else:
             # testing_idx = [i for i in range(1, 49) if i not in [2, 6, 12, 32, 42]]
             # testing_idx = [i for i in range(1, 49) if i not in [10,11,14,15,16,17,18,19,20,21,25,26,33,34,36,37,4,43,46,5,8,9]]
-            testing_idx = range(1, 49)
-            # testing_idx = range(1, 2)
+            # testing_idx = range(1, 49)
+            testing_idx = range(1, 2)
 
         for i in tqdm.tqdm(testing_idx):
             model = LLM(
